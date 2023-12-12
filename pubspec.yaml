@@ -42,6 +42,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   pull_to_refresh: ^2.0.0
   hive_flutter: ^1.1.0
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

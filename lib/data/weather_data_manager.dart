@@ -9,12 +9,14 @@ class WeatherDataManager {
 
   CacheManager get _cacheManager => CacheManager.instance;
 
-  final String accessKey = '77a4ea0ecda64bee967231549231112';
+  final int expiryDurationInSeconds = 3600;
 
-  Future<Map<String, dynamic>> fetchWeather(
+  final String _accessKey = '77a4ea0ecda64bee967231549231112';
+
+  Future<Map<dynamic, dynamic>> fetchWeather(
       {required String city, bool cacheEnabled = true}) async {
     final apiUrl =
-        'https://api.weatherapi.com/v1/current.json?key=$accessKey&q=$city';
+        'https://api.weatherapi.com/v1/current.json?key=$_accessKey&q=$city';
 
     if (cacheEnabled) {
       // Attempting to retrieve from cache
@@ -31,7 +33,7 @@ class WeatherDataManager {
 
     // Saving data to cache
     await _cacheManager.saveData(apiUrl, responseData,
-        expiryDurationInSeconds: 5);
+        expiryDurationInSeconds: expiryDurationInSeconds);
 
     return responseData;
   }

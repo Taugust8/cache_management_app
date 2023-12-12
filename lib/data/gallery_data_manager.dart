@@ -9,12 +9,14 @@ class GalleryDataManager {
 
   CacheManager get _cacheManager => CacheManager.instance;
 
-  final String accessKey = 'GVBLAKvuz9TgX05CjgS_MSETQpZOMncJ8fuomLoadkA';
+  final int expiryDurationInSeconds = 3600;
+
+  final String _accessKey = 'GVBLAKvuz9TgX05CjgS_MSETQpZOMncJ8fuomLoadkA';
 
   Future<List<String>> fetchImages(
       {int count = 30, bool cacheEnabled = true}) async {
     final apiUrl =
-        'https://api.unsplash.com/photos/random?count=$count&client_id=$accessKey';
+        'https://api.unsplash.com/photos/random?count=$count&client_id=$_accessKey';
 
     if (cacheEnabled) {
       // Attempting to retrieve from cache
@@ -35,7 +37,7 @@ class GalleryDataManager {
 
     // Saving data to cache
     await _cacheManager.saveData(apiUrl, imageUrls,
-        expiryDurationInSeconds: 20);
+        expiryDurationInSeconds: expiryDurationInSeconds);
 
     return imageUrls;
   }

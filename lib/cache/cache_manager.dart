@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cache_management_app/cache/cache_entry.dart';
 import 'package:cache_management_app/cache/cache_entry_adapter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class CacheManager {
@@ -13,11 +17,28 @@ class CacheManager {
   Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(CacheEntryAdapter());
-    await Hive.openBox(_boxName);
+    await Hive.openBox(_boxName,
+        encryptionCipher: HiveAesCipher(await _getEncryptionKey()));
+  }
+
+  Future<Uint8List> _getEncryptionKey() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    var containsEncryptionKey =
+        await secureStorage.containsKey(key: 'encryptionKey');
+    if (!containsEncryptionKey) {
+      var key = Hive.generateSecureKey();
+      await secureStorage.write(
+          key: 'encryptionKey', value: base64UrlEncode(key));
+    }
+    var encryptionKey =
+        base64Url.decode((await secureStorage.read(key: 'encryptionKey'))!);
+
+    return encryptionKey;
   }
 
   void clear() {
     Hive.box(_boxName).clear();
+    print('Cache cleared');
   }
 
   Future<void> saveData(String key, dynamic data,
