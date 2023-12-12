@@ -1,5 +1,4 @@
-import 'package:cache_management_app/api/api_client.dart';
-import 'package:cache_management_app/cache/cache_manager.dart';
+import 'package:cache_management_app/data/weather_data_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -12,29 +11,16 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  CacheManager get _cacheManager => CacheManager.instance;
-  final String accessKey = '77a4ea0ecda64bee967231549231112';
+  WeatherDataManager get _weatherDataManager => WeatherDataManager.instance;
   final String city = 'Montreal';
   Map<dynamic, dynamic> weatherData = <String, dynamic>{};
-
-  Future<Map<dynamic, dynamic>> fetchWeather() async {
-    Map<dynamic, dynamic> weatherData;
-    if (_cacheManager.fetchData('weather') == null) {
-      await Future.delayed(const Duration(seconds: 3));
-      weatherData = await ApiClient.instance.getData(
-          'http://api.weatherapi.com/v1/current.json?key=$accessKey&q=$city');
-      _cacheManager.saveData('weather', weatherData);
-    } else {
-      weatherData = _cacheManager.fetchData('weather');
-    }
-    return weatherData;
-  }
 
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
-    Map<dynamic, dynamic> refreshedData = await fetchWeather();
+    Map<dynamic, dynamic> refreshedData =
+        await _weatherDataManager.fetchWeather(city: city);
     setState(() {
       weatherData = refreshedData;
     });
@@ -49,7 +35,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           controller: _refreshController,
           onRefresh: _onRefresh,
           child: FutureBuilder(
-              future: fetchWeather(),
+              future: _weatherDataManager.fetchWeather(city: city),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
