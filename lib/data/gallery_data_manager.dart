@@ -1,26 +1,21 @@
 import 'package:cache_management_app/api/api_client.dart';
-import 'package:cache_management_app/cache/cache_manager.dart';
+import 'package:cache_management_app/data/abstract_data_manager.dart';
 
-class GalleryDataManager {
+class GalleryDataManager extends AbstractDataManager {
   factory GalleryDataManager() => _instance;
   GalleryDataManager._internal();
   static final GalleryDataManager _instance = GalleryDataManager._internal();
   static GalleryDataManager get instance => _instance;
 
-  CacheManager get _cacheManager => CacheManager.instance;
-
-  final int expirationDurationInSeconds = 3600;
-
   final String _accessKey = 'GVBLAKvuz9TgX05CjgS_MSETQpZOMncJ8fuomLoadkA';
 
-  Future<List<String>> fetchImages(
-      {int count = 30, bool cacheEnabled = true}) async {
+  Future<List<String>> fetchImages({int count = 30}) async {
     final apiUrl =
         'https://api.unsplash.com/photos/random?count=$count&client_id=$_accessKey';
 
     if (cacheEnabled) {
       // Attempting to retrieve from cache
-      final cachedData = _cacheManager.fetchData(apiUrl);
+      final cachedData = cacheManager.fetchData(apiUrl);
 
       if (cachedData != null) {
         print('Gallery data retrieved from cache');
@@ -39,7 +34,7 @@ class GalleryDataManager {
         .toList();
 
     // Saving data to cache
-    await _cacheManager.saveData(apiUrl, imageUrls,
+    await cacheManager.saveData(apiUrl, imageUrls,
         expirationDurationInSeconds: expirationDurationInSeconds);
 
     return imageUrls;

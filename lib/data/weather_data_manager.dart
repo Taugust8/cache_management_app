@@ -1,26 +1,21 @@
 import 'package:cache_management_app/api/api_client.dart';
-import 'package:cache_management_app/cache/cache_manager.dart';
+import 'package:cache_management_app/data/abstract_data_manager.dart';
 
-class WeatherDataManager {
+class WeatherDataManager extends AbstractDataManager {
   factory WeatherDataManager() => _instance;
   WeatherDataManager._internal();
   static final WeatherDataManager _instance = WeatherDataManager._internal();
   static WeatherDataManager get instance => _instance;
 
-  CacheManager get _cacheManager => CacheManager.instance;
-
-  final int expirationDurationInSeconds = 3600;
-
   final String _accessKey = '77a4ea0ecda64bee967231549231112';
 
-  Future<Map<dynamic, dynamic>> fetchWeather(
-      {required String city, bool cacheEnabled = true}) async {
+  Future<Map<dynamic, dynamic>> fetchWeather({required String city}) async {
     final apiUrl =
         'https://api.weatherapi.com/v1/current.json?key=$_accessKey&q=$city';
 
     if (cacheEnabled) {
       // Attempting to retrieve from cache
-      final cachedData = _cacheManager.fetchData(apiUrl);
+      final cachedData = cacheManager.fetchData(apiUrl);
 
       if (cachedData != null) {
         print('Weather data retrieved from cache');
@@ -35,7 +30,7 @@ class WeatherDataManager {
     final responseData = await ApiClient.instance.getData(apiUrl);
 
     // Saving data to cache
-    await _cacheManager.saveData(apiUrl, responseData,
+    await cacheManager.saveData(apiUrl, responseData,
         expirationDurationInSeconds: expirationDurationInSeconds);
 
     return responseData;
