@@ -28,6 +28,9 @@ class WeatherDataManager {
       }
     }
 
+    //Voluntary delays to demonstrate a long execution query
+    await Future.delayed(const Duration(seconds: 2));
+
     // If the data is not cached, make an API call
     final responseData = await ApiClient.instance.getData(apiUrl);
 

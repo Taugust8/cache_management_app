@@ -20,7 +20,7 @@ class _PhotoGalleryScreenState extends State<GalleryScreen> {
 
   void _onRefresh() async {
     List<String> refreshedData =
-        await _galleryDataManager.fetchImages(count: 30);
+        await _galleryDataManager.fetchImages(count: 30, cacheEnabled: true);
     setState(() {
       imageUrls = refreshedData;
     });

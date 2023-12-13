@@ -32,7 +32,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
           controller: _refreshController,
           onRefresh: _onRefresh,
           child: FutureBuilder(
-              future: _weatherDataManager.fetchWeather(city: city),
+              future: _weatherDataManager.fetchWeather(
+                  city: city, cacheEnabled: true),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(

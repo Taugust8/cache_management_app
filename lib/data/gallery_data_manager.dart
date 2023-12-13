@@ -27,6 +27,9 @@ class GalleryDataManager {
         return cachedData;
       }
     }
+    
+    //Voluntary delays to demonstrate a long execution query
+    await Future.delayed(const Duration(seconds: 2));
 
     // If the data is not cached, make an API call
     final List<dynamic> responseData = await ApiClient.instance.getData(apiUrl);
