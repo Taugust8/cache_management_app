@@ -42,10 +42,10 @@ class CacheManager {
   }
 
   Future<void> saveData(String key, dynamic data,
-      {int expiryDurationInSeconds = 3600}) async {
+      {int expirationDurationInSeconds = 3600}) async {
     final box = Hive.box(_boxName);
     final cacheEntry = CacheEntry(
-        data, DateTime.now().add(Duration(seconds: expiryDurationInSeconds)));
+        data, DateTime.now().add(Duration(seconds: expirationDurationInSeconds)));
     await box.put(key, cacheEntry);
   }
 

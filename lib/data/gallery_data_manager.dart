@@ -9,7 +9,7 @@ class GalleryDataManager {
 
   CacheManager get _cacheManager => CacheManager.instance;
 
-  final int expiryDurationInSeconds = 3600;
+  final int expirationDurationInSeconds = 3600;
 
   final String _accessKey = 'GVBLAKvuz9TgX05CjgS_MSETQpZOMncJ8fuomLoadkA';
 
@@ -27,7 +27,7 @@ class GalleryDataManager {
         return cachedData;
       }
     }
-    
+
     //Voluntary delays to demonstrate a long execution query
     await Future.delayed(const Duration(seconds: 2));
 
@@ -40,7 +40,7 @@ class GalleryDataManager {
 
     // Saving data to cache
     await _cacheManager.saveData(apiUrl, imageUrls,
-        expiryDurationInSeconds: expiryDurationInSeconds);
+        expirationDurationInSeconds: expirationDurationInSeconds);
 
     return imageUrls;
   }

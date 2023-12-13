@@ -6,11 +6,11 @@ class CacheEntry extends HiveObject {
   final dynamic data;
 
   @HiveField(1)
-  final DateTime expiryTime;
+  final DateTime expirationTime;
 
-  CacheEntry(this.data, this.expiryTime);
+  CacheEntry(this.data, this.expirationTime);
 
   bool isExpired() {
-    return DateTime.now().isAfter(expiryTime);
+    return DateTime.now().isAfter(expirationTime);
   }
 }

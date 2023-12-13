@@ -12,7 +12,7 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
   WeatherDataManager get _weatherDataManager => WeatherDataManager.instance;
-  final String city = 'Montreal';
+  final String city = 'Paris';
   Map<dynamic, dynamic> weatherData = <String, dynamic>{};
 
   final RefreshController _refreshController =

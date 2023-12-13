@@ -9,7 +9,7 @@ class WeatherDataManager {
 
   CacheManager get _cacheManager => CacheManager.instance;
 
-  final int expiryDurationInSeconds = 3600;
+  final int expirationDurationInSeconds = 3600;
 
   final String _accessKey = '77a4ea0ecda64bee967231549231112';
 
@@ -36,7 +36,7 @@ class WeatherDataManager {
 
     // Saving data to cache
     await _cacheManager.saveData(apiUrl, responseData,
-        expiryDurationInSeconds: expiryDurationInSeconds);
+        expirationDurationInSeconds: expirationDurationInSeconds);
 
     return responseData;
   }

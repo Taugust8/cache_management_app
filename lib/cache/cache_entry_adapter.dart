@@ -16,6 +16,6 @@ class CacheEntryAdapter extends TypeAdapter<CacheEntry> {
   @override
   void write(BinaryWriter writer, CacheEntry obj) {
     writer.write(obj.data);
-    writer.write(obj.expiryTime);
+    writer.write(obj.expirationTime);
   }
 }
