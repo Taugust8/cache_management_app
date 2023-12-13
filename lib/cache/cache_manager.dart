@@ -23,14 +23,14 @@ class CacheManager {
 
   Future<Uint8List> _getEncryptionKey() async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-    var containsEncryptionKey =
+    bool containsEncryptionKey =
         await secureStorage.containsKey(key: 'encryptionKey');
     if (!containsEncryptionKey) {
-      var key = Hive.generateSecureKey();
+      List<int> key = Hive.generateSecureKey();
       await secureStorage.write(
           key: 'encryptionKey', value: base64UrlEncode(key));
     }
-    var encryptionKey =
+    Uint8List encryptionKey =
         base64Url.decode((await secureStorage.read(key: 'encryptionKey'))!);
 
     return encryptionKey;
@@ -43,15 +43,15 @@ class CacheManager {
 
   Future<void> saveData(String key, dynamic data,
       {int expirationDurationInSeconds = 3600}) async {
-    final box = Hive.box(_boxName);
-    final cacheEntry = CacheEntry(
-        data, DateTime.now().add(Duration(seconds: expirationDurationInSeconds)));
+    Box box = Hive.box(_boxName);
+    CacheEntry cacheEntry = CacheEntry(data,
+        DateTime.now().add(Duration(seconds: expirationDurationInSeconds)));
     await box.put(key, cacheEntry);
   }
 
   dynamic fetchData(String key) {
-    final box = Hive.box(_boxName);
-    final cacheEntry = box.get(key) as CacheEntry?;
+    Box box = Hive.box(_boxName);
+    CacheEntry? cacheEntry = box.get(key) as CacheEntry?;
     if (cacheEntry != null && !cacheEntry.isExpired()) {
       return cacheEntry.data;
     } else {
