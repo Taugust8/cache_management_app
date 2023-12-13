@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0)
-class CacheEntry {
+class CacheEntry extends HiveObject {
   @HiveField(0)
   final dynamic data;
 
