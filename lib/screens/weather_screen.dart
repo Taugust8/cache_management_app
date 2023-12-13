@@ -19,12 +19,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
-    Map<dynamic, dynamic> refreshedData =
-        await _weatherDataManager.fetchWeather(city: city);
     setState(() {
-      weatherData = refreshedData;
+      _refreshController.refreshCompleted();
     });
-    _refreshController.refreshCompleted();
   }
 
   @override

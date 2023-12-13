@@ -16,7 +16,7 @@ class _PhotoGalleryScreenState extends State<GalleryScreen> {
   List<String> imageUrls = [];
 
   final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: true);
 
   void _onRefresh() async {
     List<String> refreshedData =
@@ -32,55 +32,35 @@ class _PhotoGalleryScreenState extends State<GalleryScreen> {
     return Scaffold(
       body: SafeArea(
         child: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          child: FutureBuilder(
-              future: _galleryDataManager.fetchImages(count: 30),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.orange,
-                  ));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData) {
-                  return const Center(child: Text('No data available'));
-                } else {
-                  imageUrls = snapshot.data!;
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
-                    ),
-                    itemCount: imageUrls.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
-                        child: CachedNetworkImage(
-                          imageUrl: imageUrls[index],
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => SizedBox(
-                                  height: 20,
-                                  child: Center(
-                                      child: CircularProgressIndicator(
-                                          color: Colors.blue,
-                                          value: downloadProgress.progress))),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      );
-                    },
-                  );
-                }
-              }),
-        ),
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+              ),
+              itemCount: imageUrls.length,
+              itemBuilder: (context, index) {
+                return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrls[index],
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => SizedBox(
+                            height: 20,
+                            child: Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                    value: downloadProgress.progress))),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                );
+              },
+            )),
       ),
     );
   }
